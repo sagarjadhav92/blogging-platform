@@ -1,0 +1,6 @@
+{% extends "base.html" %}{% block title %}{% if post %}Edit{% else %}New{% endif %} post · BlogSpace{% endblock %}
+{% block content %}<div class="form-card wide"><p class="eyebrow">Your voice matters</p><h1>{% if post %}Edit your story{% else %}Write a new story{% endif %}</h1>
+<form method="post"><label>Post title</label><input name="title" required maxlength="160" value="{{ post.title if post else '' }}" placeholder="Give your story a title">
+<label>Category</label><input name="category" maxlength="60" value="{{ post.category if post else 'General' }}" placeholder="Technology, Travel, Education...">
+<label>Content</label><textarea name="content" rows="12" required placeholder="Start writing your story...">{{ post.content if post else '' }}</textarea>
+<button class="button full" type="submit">{% if post %}Save changes{% else %}Publish post{% endif %}</button></form></div>{% endblock %}

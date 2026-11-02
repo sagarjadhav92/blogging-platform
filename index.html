@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block title %}Explore · BlogSpace{% endblock %}
+{% block content %}
+<section class="hero">
+  <p class="eyebrow">A place for ideas</p>
+  <h1>Stories, thoughts &amp; ideas.<br><span>Shared with the world.</span></h1>
+  <p class="hero-text">Discover articles from the community or publish your own story.</p>
+  {% if current_user %}<a class="button" href="{{ url_for('new_post') }}">＋ Create a post</a>{% else %}<a class="button" href="{{ url_for('register') }}">Join the community</a>{% endif %}
+</section>
+<form class="filters" method="get" action="{{ url_for('index') }}">
+  <input name="q" value="{{ q }}" placeholder="Search posts...">
+  <select name="category"><option value="">All categories</option>{% for c in categories %}<option value="{{ c }}" {% if selected_category == c %}selected{% endif %}>{{ c }}</option>{% endfor %}</select>
+  <button class="button" type="submit">Search</button>
+  {% if q or selected_category %}<a class="clear" href="{{ url_for('index') }}">Clear</a>{% endif %}
+</form>
+<div class="section-heading"><div><p class="eyebrow">Community journal</p><h2>Latest stories</h2></div><span>{{ posts|length }} post(s)</span></div>
+{% if posts %}
+<div class="post-grid">
+{% for post in posts %}
+  <article class="post-card">
+    <span class="tag">{{ post.category }}</span>
+    <h3><a href="{{ url_for('post_detail', post_id=post.id) }}">{{ post.title }}</a></h3>
+    <p class="excerpt">{{ post.content[:180] }}{% if post.content|length > 180 %}…{% endif %}</p>
+    <div class="meta">By {{ post.author.username }} · {{ post.created_at.strftime('%d %b %Y') }} · {{ post.comments|length }} comments</div>
+    <a class="read-more" href="{{ url_for('post_detail', post_id=post.id) }}">Read story →</a>
+  </article>
+{% endfor %}
+</div>
+{% else %}<div class="empty"><h3>No posts found yet</h3><p>Try another search or be the first to publish a story.</p>{% if current_user %}<a class="button" href="{{ url_for('new_post') }}">Write the first post</a>{% endif %}</div>{% endif %}
+{% endblock %}
